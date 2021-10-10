@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     private Button startButton;
+    private TextView textView;
     private volatile boolean stopThread = false;
     class ExampleRunnable implements Runnable {
 
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         startButton = findViewById(R.id.startButton);
+        textView = findViewById(R.id.textView);
     }
 
     public void mockFileDownloader() {
@@ -45,6 +48,13 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             Log.d("MainActivity", "Download Progress: " + downloadProgress + "%");
+            int finalDownloadProgress = downloadProgress;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    textView.setText("Download Progress: " + finalDownloadProgress + "%");
+                }
+            });
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
